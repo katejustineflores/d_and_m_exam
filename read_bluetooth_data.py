@@ -25,6 +25,8 @@ xy2 = []
 
 seg_len = 1
 
+nodes = []
+
 
 plt.ion()
 
@@ -45,34 +47,29 @@ arduinoData = serial.Serial(
                 timeout = None)        
     
 def realtimePlot():
+ 
+    nid1 = nodes[0] 
     
-    ax1 = plt.subplot(2,2,1)
-    plt.ylabel('Node 1', color='black', fontsize=8)
-    ax1.plot(xz1, 'red')
+    plt.figure(1)
+    ax1 = plt.subplot(1,2,1)
+    ax1.plot(xy1, 'b', label = nid1, marker = 's')
+    ax1.plot(xy2, 'r', label = 'other node', marker = 's')
+
+    plt.xlabel('displacement (m)')
+    plt.ylabel('Segment Length (m)')
+    plt.title('XY displacement')
     plt.grid()
-    plt.title('Horizontal Displacement, Across Slope (m)', color='black',fontsize=8,verticalalignment='bottom')
+    plt.legend()
 
+    ax2 = plt.subplot(1,2,2)
+    ax2.plot(xz1, 'b', label = nid1,  marker = 's')
+    ax2.plot(xz2, 'r', label = 'other node', marker = 's')
 
-#    plt.title(stdvx,color='red',fontsize=8,verticalalignment='top')
-
-    ax2 = plt.subplot(2,2,2, sharex = ax1)
-    ax2.plot(xy1, 'blue')
-    plt.grid()
-    plt.title('Horizontal Displacement, Downslope (m)', color='black',fontsize=8,verticalalignment='bottom')
-
-
-#    plt.title(stdvy, color='blue',fontsize=8,verticalalignment='top')
-    
-    ax1 = plt.subplot(2,2,3)
-    plt.ylabel('Node 2', color='black', fontsize=8)
-    ax1.plot(xz2, 'red', marker = 'o')
-    plt.grid()
-
-
-    ax2 = plt.subplot(2,2,4, sharex = ax1)
-    ax2.plot(xy2, 'blue', marker = 'o')
-    plt.grid()
-
+    plt.xlabel('displacement (m)')
+    plt.ylabel('Segment Length (m)')
+    plt.title('XZ displacement')
+    plt.grid() 
+    plt.legend()
  
     
 def accel_to_lin_xz_xy(seg_len,xa,ya,za): #from genproc_netvel.py
@@ -132,25 +129,27 @@ try:
         xz = list((accel_to_lin_xz_xy(seg_len,x,y,z)))
         xz = float(xz[0])
         xz_val.append(xz)
+        xz1, xz2 = xz_val[::2], xz_val[1::2]
         
-        for i in range(0, len(xz_val)):
-            if i % 2:
-                xz1.append(xz_val[i])
-            else:
-                xz2.append(xz_val[i])
-#
+
 ##      store xy data
         xy = list((accel_to_lin_xz_xy(seg_len,x,y,z)))
         xy = float(xy[1])
         xy_val.append(xy)
         
-        for i in range(0, len(xy_val)):
-            if i % 2:
-                xy1.append(xy_val[i])
-            else:
-                xy2.append(xy_val[i])     
-
-        drawnow(realtimePlot)
+        xy1, xy2 = xy_val[::2], xy_val[1::2]
+        
+        nodes.append(nid)
+        
+        print ("node_id: " + nid)
+        print ("type_num: " + type_num)
+        print ("xa: " + str(x))
+        print ("ya: " + str(y))
+        print ("za: " + str(z))
+        print("=============") 
+        
+        drawnow(realtimePlot)       
+     
         plt.pause(.000001)
 
         

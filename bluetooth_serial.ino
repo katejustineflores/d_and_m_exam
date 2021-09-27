@@ -152,7 +152,8 @@ uint8_t g_turn_on_delay = 10;
   --- Code
   sensorVersion = 3
   ---*/
-uint8_t g_sensor_version = dueFlashStorage.read(0);
+//uint8_t g_sensor_version = dueFlashStorage.read(0);
+uint8_t g_sensor_version = 4;
 
 /*
   Variable: g_datalogger_version
@@ -340,7 +341,7 @@ if (Serial.available() > 0){
     }
   
   //else if (strstr(x, "c")) {
-  else if(x == 'c'){
+ /* else if(x == 'c'){
     String serbuffer;
     Serial.setTimeout(2000);
     Serial.print("Current version:");Serial.println(g_sensor_version);
@@ -356,7 +357,7 @@ if (Serial.available() > 0){
     g_sensor_version = dueFlashStorage.read(0);
 
     //Serial.println("commands: a - accel 1 \t b - accel 2 \t c - change sensor version");
-    }
+    }*/
 
   }
 
